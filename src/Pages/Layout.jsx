@@ -16,7 +16,7 @@ const Layout = () => {
       </main>
 
       {/* Chat Input Section */}
-      <footer className="h-20 flex-shrink-0">
+      <footer className="h-20 flex-shrink-0 mb-[56px] md:mb-0 px-5">
         <ChatInput />
       </footer>
     </div>
