@@ -4,18 +4,21 @@ import Header from "./chat/header";
 
 const Layout = () => {
   return (
-    <div className="w-full">
-      <div className="fixed h-screen flex flex-col justify-between">
-        <div className="bg-amber-200 h-[75px] flex-shrink-0">
-          <Header />
-        </div>
-        <div className="bg-[url('../../Screenshot_1.jpg')] bg-cover bg-center flex-grow overflow-y-auto px-3 py-2">
-          <Chatmassege />
-        </div>
-        <div className="h-[70px] flex-shrink-0">
-          <ChatInput />
-        </div>
-      </div>
+    <div className="w-full h-screen flex flex-col">
+      {/* Header Section */}
+      <header className="bg-amber-200 h-16 flex-shrink-0">
+        <Header />
+      </header>
+
+      {/* Chat Messages Section */}
+      <main className="flex-grow bg-[url('../../Screenshot_1.jpg')] bg-cover bg-center overflow-y-auto px-3 py-2">
+        <Chatmassege />
+      </main>
+
+      {/* Chat Input Section */}
+      <footer className="h-20 flex-shrink-0">
+        <ChatInput />
+      </footer>
     </div>
   );
 };
