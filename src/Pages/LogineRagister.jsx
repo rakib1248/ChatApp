@@ -6,7 +6,7 @@ import { cloudImgUpload } from "../utils/cloudinaryImage";
 import { alertToster } from "../utils/helper";
 
 const LogineRagister = () => {
-  const { setUser, setLoader, setSingleUser } = useContext(UserContext);
+  const { setUser, setLoader, setSingleUser, } = useContext(UserContext);
   const [image, setImage] = useState();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -28,28 +28,31 @@ const LogineRagister = () => {
 
       const users = await getAllDoc("users");
       const user = users.find(
-        (user) => user.email === input.email && user.password === input.password
+        (user) =>
+          user.email.trim().toLowerCase() ===
+            input.email.trim().toLowerCase() &&
+          user.password.trim() === input.password.trim()
       );
 
       if (user) {
         setUser(true);
         localStorage.setItem("user", JSON.stringify(user));
         alertToster("Your Account Logine Successfully!");
-            try {
-              const userData = JSON.parse(localStorage.getItem("user"));
+        try {
+          const userData = JSON.parse(localStorage.getItem("user"));
 
-              if (userData) {
-                setSingleUser(userData);
-                setUser(true);
-              } else {
-                setUser(false);
-                setSingleUser({});
-              }
-            } catch (error) {
-              console.error("Error parsing user data:", error);
-              setUser(false);
-              setSingleUser({});
-            }
+          if (userData) {
+            setSingleUser(userData);
+            setUser(true);
+          } else {
+            setUser(false);
+            setSingleUser({});
+          }
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+          setUser(false);
+          setSingleUser({});
+        }
         setLoader(false);
       } else {
         setLoader(false);
@@ -63,23 +66,39 @@ const LogineRagister = () => {
       });
     } else {
       // Handle signup logic
-      setLoader(true);
-      const img = await cloudImgUpload({
-        file: image,
-        cloudName: "drpihbzih",
-        preset: "test_upload",
-      });
-      await CreateDoc("users", { ...input, photo: img.secure_url });
+      const users = await getAllDoc("users");
+      const isEmail = users.some(
+        (item) =>
+          item.email.trim().toLowerCase() === input.email.trim().toLowerCase()
+      );
+      if (isEmail) {
+        alertToster(
+          "This Email Already Registered! Try another email.",
+          "error"
+        );
+        setLoader(false);
+      } else {
+        
+        setLoader(true);
+        const img = await cloudImgUpload({
+          file: image,
+          cloudName: "drpihbzih",
+          preset: "test_upload",
+        });
+        await CreateDoc("users", { ...input, photo: img.secure_url });
+  
+        setIsLogin(true);
+        alertToster("Your Account Create Successfully!");
+  
+        setInput({
+          name: "",
+          email: "",
+          password: "",
+        });
+        setLoader(false);
+      }
+      
 
-      setIsLogin(true);
-      alertToster("Your Account Create Successfully!");
-
-      setInput({
-        name: "",
-        email: "",
-        password: "",
-      });
-      setLoader(false);
     }
   };
   return (

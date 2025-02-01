@@ -30,7 +30,7 @@ const Chatmassege = () => {
     setModal(false);
     setLoader(true);
 
-    await delteData("chat", id);
+    await delteData("chat", update.id);
     setUpdate({ id: "", msg: "", true: false });
 
     setLoader(false);
