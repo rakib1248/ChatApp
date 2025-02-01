@@ -8,11 +8,17 @@ import { delteData } from "../../Firebase/model";
 const Chatmassege = () => {
   const [ismodal, setModal] = useState(false);
   const messagesEndRef = useRef(null);
-  const { chat, singleUser, setLoader, setUpdate } = useContext(UserContext);
-  // delete chate
-  const handlPopup = () => {
+  const { chat, singleUser, setLoader, setUpdate, update } =
+    useContext(UserContext);
+  // delete chat
+
+
+  const handlPopup = (id) => {
+  setUpdate((prev) => ({ ...prev, id: id }));
+
     setModal(true);
   };
+ 
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -25,18 +31,31 @@ const Chatmassege = () => {
     setLoader(true);
 
     await delteData("chat", id);
+    setUpdate({ id: "", msg: "", true: false });
 
     setLoader(false);
     alertToster("Your Message Delete successfully!", "info");
   };
 
   // update Chat
-  const handledataUpdate = (id, msg) => {
-    setUpdate({
-      id: id,
-      msg: msg,
-      true: true,
-    });
+  const handledataUpdate = () => {
+    const selectedMessage = chat.find((item) => item.id === update.id);
+    
+
+    if (selectedMessage) {
+      setUpdate({
+        id: selectedMessage.id,
+        msg: selectedMessage.message,
+        true: true,
+      });
+    } else {
+      setUpdate({
+        id: "",
+        msg: "",
+        true: false,
+      });
+    }
+
     setModal(false);
   };
 
@@ -56,7 +75,7 @@ const Chatmassege = () => {
                     src={item.photo}
                     alt={item.name}
                   />
-                  <div onMouseUp={() => handlPopup()}>
+                  <div onMouseUp={() => handlPopup(item.id)}>
                     <p className=" text-black font-semibold text-[10px] py-1 px-4 text-end rounded-2xl">
                       {item.name}
                     </p>
@@ -75,7 +94,7 @@ const Chatmassege = () => {
 
                     <div className="flex flex-col gap-3">
                       <button
-                        onClick={() => handledataUpdate(item.id, item.message)}
+                        onClick={() => handledataUpdate(item.id)}
                         className="w-full text-2xl cursor-pointer border-b py-2 border-[#e9e9e9]">
                         Edit message
                       </button>

@@ -6,7 +6,7 @@ import { cloudImgUpload } from "../utils/cloudinaryImage";
 import { alertToster } from "../utils/helper";
 
 const LogineRagister = () => {
-  const { setUser } = useContext(UserContext);
+  const { setUser, setLoader, setSingleUser } = useContext(UserContext);
   const [image, setImage] = useState();
 
   const [isLogin, setIsLogin] = useState(true);
@@ -24,6 +24,7 @@ const LogineRagister = () => {
     e.preventDefault();
     if (isLogin) {
       // Handle login logic
+      setLoader(true);
 
       const users = await getAllDoc("users");
       const user = users.find(
@@ -34,9 +35,25 @@ const LogineRagister = () => {
         setUser(true);
         localStorage.setItem("user", JSON.stringify(user));
         alertToster("Your Account Logine Successfully!");
+            try {
+              const userData = JSON.parse(localStorage.getItem("user"));
+
+              if (userData) {
+                setSingleUser(userData);
+                setUser(true);
+              } else {
+                setUser(false);
+                setSingleUser({});
+              }
+            } catch (error) {
+              console.error("Error parsing user data:", error);
+              setUser(false);
+              setSingleUser({});
+            }
+        setLoader(false);
       } else {
+        setLoader(false);
         alertToster("invlid password or username", "error");
-        
       }
 
       setInput({
@@ -46,6 +63,7 @@ const LogineRagister = () => {
       });
     } else {
       // Handle signup logic
+      setLoader(true);
       const img = await cloudImgUpload({
         file: image,
         cloudName: "drpihbzih",
@@ -54,13 +72,14 @@ const LogineRagister = () => {
       await CreateDoc("users", { ...input, photo: img.secure_url });
 
       setIsLogin(true);
-      alertToster("Your Account Create Successfully!")
+      alertToster("Your Account Create Successfully!");
 
       setInput({
         name: "",
         email: "",
         password: "",
       });
+      setLoader(false);
     }
   };
   return (

@@ -25,23 +25,25 @@ const ChatInput = () => {
     if (!message.trim()) return; // Avoid empty messages
 
     try {
-      if (update.true) {
+      if (update.true === true) {
         await updateData("chat", update.id, { message: update.msg });
         setUpdate({ id: "", msg: "", true: false });
         alertToster("Your Message Updated Successfully!");
       } else {
         await CreateDoc("chat", {
           message: input,
-          photo: singleUser.photo,
+          photo: singleUser?.photo,
           verifyId: singleUser.id,
           name: singleUser.name,
           createdAt: serverTimestamp(),
         });
         setInput("");
+        setUpdate({ id: "", msg: "", true: false });
       }
     } catch (error) {
       console.error("Error submitting message:", error);
-      alertToster("An error occurred. Please try again.");
+      setUpdate({ id: "", msg: "", true: false });
+      alertToster("An error. Please refresh the page.", "error");
     }
   };
 
