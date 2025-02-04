@@ -12,13 +12,11 @@ const Chatmassege = () => {
     useContext(UserContext);
   // delete chat
 
-
   const handlPopup = (id) => {
-  setUpdate((prev) => ({ ...prev, id: id }));
+    setUpdate((prev) => ({ ...prev, id: id }));
 
     setModal(true);
   };
- 
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({
@@ -26,7 +24,7 @@ const Chatmassege = () => {
       block: "end",
     });
   }, [chat]);
-  const handledeletmsg = async (id) => {
+  const handledeletmsg = async () => {
     setModal(false);
     setLoader(true);
 
@@ -40,7 +38,6 @@ const Chatmassege = () => {
   // update Chat
   const handledataUpdate = () => {
     const selectedMessage = chat.find((item) => item.id === update.id);
-    
 
     if (selectedMessage) {
       setUpdate({
@@ -79,9 +76,18 @@ const Chatmassege = () => {
                     <p className=" text-black font-semibold text-[10px] py-1 px-4 text-end rounded-2xl">
                       {item.name}
                     </p>
-                    <p className="bg-[#78e378] text-white py-1 px-4 text-xl rounded-2xl">
-                      {item.message}
-                    </p>
+                    <div className="justify-end  flex">
+                      <p className="bg-[#78e378] text-white inline-block  py-1 px-4 text-xl rounded-2xl">
+                        {item.message}
+                      </p>
+                    </div>
+                    {item.postimg && (
+                      <img
+                        className="w-[400px] h-[250px] my-4  object-center rounded-md  object-contain"
+                        src={item.postimg}
+                        alt=""
+                      />
+                    )}
                   </div>
                   <Modal isOpen={ismodal}>
                     <div className="relative">
@@ -123,9 +129,16 @@ const Chatmassege = () => {
                     {item.name}
                   </p>
 
-                  <p className="bg-[#F0F0F0] py-1 px-4 text-xl rounded-2xl">
-                    {item.message}
+                  <p className="bg-[#F0F0F0] py-1 inline-block px-4 text-xl rounded-2xl">
+                    {item.message && item.message}
                   </p>
+                  {item.postimg && (
+                    <img
+                      className="w-[400px] h-[250px] my-4  object-center rounded-md  object-contain"
+                      src={item.postimg}
+                      alt=""
+                    />
+                  )}
                 </div>
               </div>
             );

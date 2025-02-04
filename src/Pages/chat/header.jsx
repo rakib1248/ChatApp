@@ -11,7 +11,7 @@ const Header = () => {
       <div className="flex justify-between items-center container bg-white px-6 py-2">
         <div className="flex items-center gap-3">
           <img
-            className="h-14 rounded-full object-cover"
+            className="h-13 w-13 rounded-full object-cover"
             src={singleUser.photo}
             alt=""
           />
